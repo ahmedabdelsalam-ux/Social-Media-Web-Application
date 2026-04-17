@@ -1,0 +1,52 @@
+<div class="flex flex-col gap-2 p-3 border border-gray-100 rounded-xl">
+  <div class="flex items-center gap-3">
+    <img
+      [routerLink]="['/user-profile', friend._id]"
+      [src]="friend.photo || 'assets/default-avatar.png'"
+      [alt]="friend.name"
+      class="size-10 rounded-full object-cover shrink-0 border border-gray-200 cursor-pointer"
+    />
+    <div class="flex flex-col min-w-0 flex-1">
+      <span
+        [routerLink]="['/user-profile', friend._id]"
+        class="text-sm font-semibold text-gray-800 truncate cursor-pointer hover:underline transition"
+        >{{ friend.name }}</span
+      >
+      <span class="text-xs text-gray-400 truncate">
+        @if (friend.username) {
+          &#64;{{ friend.username }}
+        } @else {
+          No username
+        }
+      </span>
+    </div>
+    <button
+      (click)="toggleFollow()"
+      class="text-xs font-semibold px-3 py-1.5 rounded-lg shrink-0 border transition cursor-pointer"
+      [ngClass]="
+        isFollowing()
+          ? 'bg-main-color text-white border-main-color'
+          : 'border-main-color text-main-color hover:bg-main-color hover:text-white'
+      "
+    >
+      <i
+        class="mr-1"
+        [ngClass]="isFollowing() ? 'fa-solid fa-user-check' : 'fa-solid fa-user-plus'"
+      ></i>
+
+      {{ isFollowing() ? 'Following' : 'Follow' }}
+    </button>
+  </div>
+
+  @if (friend.mutualFollowersCount > 0) {
+    <span class="text-xs text-gray-400">
+      <i class="fa-solid fa-user-group mr-1"></i>
+      {{ friend.mutualFollowersCount }} mutual
+    </span>
+  } @else if (friend.followersCount > 0) {
+    <span class="text-xs text-gray-400">
+      <i class="fa-solid fa-user mr-1"></i>
+      {{ friend.followersCount }} followers
+    </span>
+  }
+</div>

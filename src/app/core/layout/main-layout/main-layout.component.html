@@ -1,0 +1,233 @@
+<!-- ═══════════════════════════════════════════════════
+     TOP NAV  (logo + profile only on mobile)
+     ═══════════════════════════════════════════════════ -->
+<nav class="sticky top-0 z-50 bg-white border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4 sm:gap-8">
+    <!-- ── LOGO ── -->
+    <a routerLink="/home" class="flex items-center gap-2.5 shrink-0 no-underline">
+      <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center">
+        <img
+          class="rounded-2xl w-full h-full object-cover"
+          src="/assets/images/route.png"
+          alt="route"
+        />
+      </div>
+      <span class="text-base sm:text-lg font-bold tracking-tight text-main-color">Route Posts</span>
+    </a>
+
+    <!-- ── NAV LINKS (desktop only — hidden on mobile) ── -->
+    <ul
+      class="hidden md:flex items-center justify-center gap-1 list-none mx-auto p-1 rounded-2xl bg-light-grey"
+    >
+      <!-- Feed -->
+      <li>
+        <a
+          routerLink="/home"
+          routerLinkActive="text-main-color bg-white"
+          class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium hover:bg-white hover:text-main-color transition-colors no-underline"
+        >
+          <i class="fa-regular fa-house"></i>
+          <span>Feed</span>
+        </a>
+      </li>
+
+      <!-- Profile -->
+      <li>
+        <a
+          routerLink="/profile"
+          routerLinkActive="text-main-color bg-white"
+          class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium hover:bg-white hover:text-main-color transition-colors no-underline"
+        >
+          <i class="fa-regular fa-user"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+
+      <!-- Notifications -->
+      <li>
+        <a
+          routerLink="/notifications"
+          routerLinkActive="text-main-color bg-white"
+          class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium hover:bg-white hover:text-main-color transition-colors no-underline relative"
+        >
+          <span class="relative">
+            <i class="fa-regular fa-comment"></i>
+
+            @if (unreadCount() > 0) {
+              <span
+                class="absolute -top-2 -right-2 min-w-5 h-5 px-1.5 bg-red-500 text-white text-2xs font-bold rounded-full flex items-center justify-center shadow-sm"
+              >
+                {{ unreadCount() > 99 ? '99+' : unreadCount() }}
+              </span>
+            }
+          </span>
+          <span>Notifications</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- ── PROFILE BUTTON ── -->
+    <div class="relative ml-auto shrink-0" #profileArea>
+      <button
+        (click)="toggleDropdown()"
+        class="flex items-center gap-2 sm:gap-2.5 pl-1.5 pr-2 sm:pr-3 py-1.5 rounded-xl bg-light-grey border border-white/10 cursor-pointer text-black text-sm font-medium hover:border-indigo-500/50 hover:text-main-color hover:bg-white transition-colors"
+        [class.border-indigo-500/50]="isOpen"
+        [class.bg-indigo-500/10]="isOpen"
+      >
+        <!-- Avatar with status dot -->
+        <div class="relative">
+          <img
+            [src]="userPhoto()"
+            [alt]="userName()"
+            class="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-500/40"
+          />
+          <span
+            class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white block"
+          ></span>
+        </div>
+
+        <!-- Username — hide on very small screens -->
+        <span class="hidden xs:inline sm:inline max-w-25 truncate">{{ userName() }}</span>
+
+        <!-- Chevron -->
+        <svg
+          class="w-4 h-4 text-slate-500 transition-transform duration-200"
+          [class.rotate-180]="isOpen"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+
+      <!-- ── DROPDOWN ── -->
+      @if (isOpen) {
+        <div
+          class="absolute top-full right-0 mt-2.5 w-52 sm:w-56 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden z-50"
+        >
+          <!-- User info -->
+          <div class="flex items-center gap-3 px-4 py-3.5">
+            <img
+              [src]="userPhoto()"
+              [alt]="userName()"
+              class="w-10 h-10 rounded-full object-cover shrink-0"
+            />
+            <div class="min-w-0">
+              <p class="text-sm font-semibold truncate">{{ userName() }}</p>
+              <p class="text-xs text-slate-500 truncate">{{ userEmail() }}</p>
+            </div>
+          </div>
+
+          <div class="h-px bg-gray-100"></div>
+
+          <!-- Change Password -->
+          <button
+            (click)="changePassword()"
+            routerLink="/changepassword"
+            class="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-50 hover:text-main-color transition-colors cursor-pointer bg-transparent border-0 text-left font-medium"
+          >
+            <svg
+              class="w-4 h-4 shrink-0 opacity-70"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            >
+              <rect x="3" y="9" width="14" height="10" rx="2" />
+              <path d="M7 9V6a3 3 0 016 0v3" />
+              <circle cx="10" cy="14" r="1.2" fill="currentColor" stroke="none" />
+            </svg>
+            Change Password
+          </button>
+
+          <!-- Sign Out -->
+          <button
+            (click)="signOut()"
+            class="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors cursor-pointer bg-transparent border-0 text-left font-medium"
+          >
+            <svg
+              class="w-4 h-4 shrink-0"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M13 4.5H16.5a1 1 0 011 1v9a1 1 0 01-1 1H13" />
+              <path d="M8 13l-3-3 3-3" />
+              <line x1="5" y1="10" x2="13" y2="10" />
+            </svg>
+            Sign Out
+          </button>
+        </div>
+      }
+    </div>
+    <!-- /profile button -->
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     BOTTOM NAV BAR  (mobile only — md:hidden)
+     ═══════════════════════════════════════════════════ -->
+<nav
+  class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-100 safe-bottom"
+>
+  <ul class="flex items-center justify-around list-none m-0 p-0 h-16">
+    <!-- Feed -->
+    <li class="flex-1">
+      <a
+        routerLink="/home"
+        routerLinkActive="text-main-color"
+        class="flex flex-col items-center justify-center gap-1 h-full text-gray-400 hover:text-main-color transition-colors no-underline text-xs font-medium"
+      >
+        <i class="fa-regular fa-house text-lg"></i>
+        <span>Feed</span>
+      </a>
+    </li>
+
+    <!-- Profile -->
+    <li class="flex-1">
+      <a
+        routerLink="/profile"
+        routerLinkActive="text-main-color"
+        class="flex flex-col items-center justify-center gap-1 h-full text-gray-400 hover:text-main-color transition-colors no-underline text-xs font-medium"
+      >
+        <i class="fa-regular fa-user text-lg"></i>
+        <span>Profile</span>
+      </a>
+    </li>
+
+    <!-- Notifications -->
+    <li class="flex-1">
+      <a
+        routerLink="/notifications"
+        routerLinkActive="text-main-color"
+        class="flex flex-col items-center justify-center gap-1 h-full text-gray-400 hover:text-main-color transition-colors no-underline text-xs font-medium"
+      >
+        <span class="relative">
+          <i class="fa-regular fa-comment text-lg"></i>
+
+          @if (unreadCount() > 0) {
+            <span
+              class="absolute -top-1.5 -right-2 min-w-5 h-5 px-1.5 bg-red-500 text-white text-2xs font-bold rounded-full flex items-center justify-center shadow-sm animate-pulse"
+            >
+              {{ unreadCount() > 99 ? '99+' : unreadCount() }}
+            </span>
+          }
+        </span>
+        <span>Notifications</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- ── Page content — add bottom padding on mobile so it clears the bottom nav ── -->
+<div class="pb-16 md:pb-0">
+  <router-outlet></router-outlet>
+</div>

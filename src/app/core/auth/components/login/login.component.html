@@ -1,0 +1,59 @@
+<section>
+  <div class="mb-5">
+    <h2 class="text-3xl font-semibold">Log in to Route Posts</h2>
+    <span class="text-gray-400">Log in and continue your social journey.</span>
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-at"></i>
+      </div>
+      <input
+        formControlName="email"
+        type="email"
+        id="email"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Email Address"
+      />
+    </div>
+
+    <div class="relative my-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <input
+        formControlName="password"
+        [type]="flag == true ? 'password' : 'text'"
+        id="password"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Password"
+      />
+
+      @if (loginForm.get('password')?.value) {
+        <i
+          class="fa-solid absolute top-[30%] right-2.5 cursor-pointer z-20"
+          [class]="flag == true ? 'fa-eye' : 'fa-eye-slash'"
+          (click)="showPassword()"
+        ></i>
+      }
+    </div>
+
+    <button
+      class="w-full text-center bg-main-color py-2.5 rounded-base cursor-pointer hover:bg-[#001f6b] transition text-white"
+    >
+      Log In
+    </button>
+
+    <button
+      type="button"
+      class="text-center mt-3 block mx-auto text-main-color text-sm cursor-pointer hover:underline transition"
+    >
+      Forget Password ?
+    </button>
+  </form>
+</section>

@@ -1,0 +1,53 @@
+<section
+  class="w-[95%] sm:w-[90%] lg:w-[80%] mx-auto mt-6 sm:mt-8 bg-white rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-xl p-4 sm:p-6"
+>
+  <!-- Header -->
+  <div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+    <!-- Title -->
+    <div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Notifications</h2>
+      <p class="text-gray-500 text-xs sm:text-sm mt-1">
+        Realtime updates for likes, comments, shares, and follows.
+      </p>
+    </div>
+
+    <!-- Button -->
+    <button
+      (click)="markAllAsRead()"
+      [disabled]="unreadCount() === 0"
+      class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm transition"
+      [class]="
+        unreadCount() === 0
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+          : 'bg-main-color text-white hover:opacity-90 cursor-pointer'
+      "
+    >
+      <i class="fa-solid fa-check-double"></i>
+      Mark all as read
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-2 sm:gap-3 mb-5 overflow-x-auto scrollbar-hide">
+    <a
+      routerLink="/notifications/all-notifications"
+      routerLinkActive="bg-main-color text-white"
+      class="px-4 sm:px-5 py-1.5 rounded-full bg-gray-100 text-sm font-medium whitespace-nowrap transition"
+    >
+      All
+    </a>
+
+    <a
+      routerLink="/notifications/unread-notifications"
+      routerLinkActive="bg-main-color text-white"
+      class="px-4 sm:px-5 py-1.5 rounded-full bg-gray-100 text-sm font-medium whitespace-nowrap transition"
+    >
+      Unread
+    </a>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="flex flex-col gap-3 sm:gap-4">
+    <router-outlet></router-outlet>
+  </div>
+</section>

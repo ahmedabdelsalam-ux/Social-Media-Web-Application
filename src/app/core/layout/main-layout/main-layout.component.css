@@ -1,0 +1,11 @@
+/* ── Safe area for notched phones (iPhone etc.) ── */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── xs breakpoint helper (screens < 480px hide username) ── */
+@media (max-width: 479px) {
+  .xs\:inline {
+    display: none !important;
+  }
+}

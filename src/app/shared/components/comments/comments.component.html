@@ -1,0 +1,412 @@
+<!-- ─── Comments List ─── -->
+<div class="max-h-80 overflow-y-auto pr-1 scroll-smooth">
+  @for (comment of commentList(); track comment._id) {
+    <div class="comment-item flex gap-2 my-1 group">
+      <!-- Avatar -->
+      <img
+        [routerLink]="
+          comment.commentCreator._id === logedUserId
+            ? ['/profile']
+            : ['/user-profile', comment.commentCreator._id]
+        "
+        class="size-8 rounded-full shrink-0 mt-0.5 object-cover cursor-pointer"
+        [src]="comment.commentCreator.photo"
+        [alt]="comment.commentCreator.name"
+        [title]="comment.commentCreator.name"
+      />
+
+      <!-- Bubble + Replies -->
+      <div class="flex flex-col max-w-[85%] w-full">
+        <div class="relative">
+          <!-- Comment Bubble -->
+          <div
+            class="bg-gray-100 hover:bg-gray-200/80 transition-colors duration-150 rounded-2xl px-3 py-2 w-fit max-w-full"
+          >
+            <h4
+              [routerLink]="
+                comment.commentCreator._id === logedUserId
+                  ? ['/profile']
+                  : ['/user-profile', comment.commentCreator._id]
+              "
+              class="text-[13px] font-semibold leading-tight text-gray-900 cursor-pointer"
+            >
+              {{ comment.commentCreator.name }}
+            </h4>
+
+            @if (activeEditCommentId !== comment._id) {
+              <p class="text-[13px] leading-snug text-gray-800 mt-0.5 wrap-break-word">
+                {{ comment.content }}
+              </p>
+              @if (comment.image) {
+                <img
+                  (click)="openImageModal(comment.image)"
+                  [src]="comment.image"
+                  class="mt-2 rounded-xl max-w-55 max-h-55 object-cover cursor-pointer"
+                />
+              }
+            }
+
+            @if (activeEditCommentId === comment._id) {
+              <textarea
+                [(ngModel)]="editContent"
+                class="w-full rounded-lg border px-2 py-1 mt-1 text-[13px]"
+              ></textarea>
+
+              @if (editPreviewImage()) {
+                <div class="mt-2 relative">
+                  <img [src]="editPreviewImage()" class="rounded-xl max-h-40 object-cover" />
+                  <button
+                    type="button"
+                    (click)="removeEditImage()"
+                    class="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition"
+                  >
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                  </button>
+                </div>
+              }
+
+              <label
+                for="editFileUpload-{{ comment._id }}"
+                class="cursor-pointer text-gray-400 hover:text-blue-500 transition mt-2 inline-block text-[13px]"
+              >
+                <i class="fa-solid fa-image"></i> Change/Add Image
+              </label>
+              <input
+                type="file"
+                id="editFileUpload-{{ comment._id }}"
+                class="hidden"
+                accept="image/*"
+                (change)="uploadEditFile($event)"
+              />
+
+              <div class="flex gap-2 mt-2">
+                <button
+                  (click)="saveComment(comment._id)"
+                  class="text-blue-500 px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                >
+                  Save
+                </button>
+                <button
+                  (click)="cancelEdit()"
+                  class="text-red-500 px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Three Dots Menu -->
+          @if (comment.commentCreator._id === logedUserId) {
+            <div
+              class="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <button
+                (click)="toggleDropdown(comment._id, $event)"
+                class="size-7 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition cursor-pointer border border-gray-200"
+              >
+                <i class="fa-solid fa-ellipsis text-gray-500 text-xs"></i>
+              </button>
+
+              @if (activeCommentId === comment._id) {
+                <div
+                  class="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50"
+                >
+                  <button
+                    (click)="startEdit(comment)"
+                    class="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] hover:bg-gray-100 transition text-gray-700"
+                  >
+                    <i class="fa-solid fa-pen text-gray-400 text-xs"></i>
+                    Edit comment
+                  </button>
+                  <button
+                    (click)="removeComment(comment._id)"
+                    class="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] text-red-500 hover:bg-red-50 transition"
+                  >
+                    <i class="fa-solid fa-trash text-xs"></i>
+                    Delete comment
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Meta -->
+        <div class="flex items-center gap-3 mt-0.5 pl-1">
+          <span class="text-[11px] text-gray-400">{{ comment.createdAt | timeago }}</span>
+          <button
+            (click)="toggleLike(comment._id)"
+            class="text-[11px] font-semibold transition cursor-pointer"
+          >
+            <span
+              [class.text-blue-500]="comment.likes.includes(logedUserId)"
+              [class.text-gray-500]="!comment.likes.includes(logedUserId)"
+            >
+              Like {{ comment.likes.length }}
+            </span>
+          </button>
+          <button
+            (click)="toggleReplies(comment._id)"
+            class="text-[11px] font-semibold transition cursor-pointer"
+            [class]="
+              openRepliesCommentId === comment._id
+                ? 'text-blue-500 hover:text-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
+            "
+          >
+            Reply
+            @if (comment.repliesCount > 0) {
+              <span class="ml-1 text-xs bg-blue-100 text-blue-500 rounded-full px-1.5 py-0.5">
+                {{ comment.repliesCount }}
+              </span>
+            }
+          </button>
+        </div>
+
+        <!-- ─── Replies Section ─── -->
+        @if (openRepliesCommentId === comment._id) {
+          <div class="mt-2 ml-2 pl-3 border-l-2 border-gray-200 flex flex-col gap-2">
+            <!-- Loading -->
+            @if (isRepliesLoading(comment._id)) {
+              <div class="flex items-center gap-2 py-2">
+                <div
+                  class="size-3 rounded-full bg-gray-300 animate-bounce [animation-delay:0ms]"
+                ></div>
+                <div
+                  class="size-3 rounded-full bg-gray-300 animate-bounce [animation-delay:150ms]"
+                ></div>
+                <div
+                  class="size-3 rounded-full bg-gray-300 animate-bounce [animation-delay:300ms]"
+                ></div>
+              </div>
+            }
+
+            @if (!isRepliesLoading(comment._id)) {
+              <!-- Replies List -->
+              @for (reply of getReplies(comment._id); track reply._id) {
+                <div class="flex gap-2">
+                  <img
+                    [routerLink]="
+                      reply.commentCreator._id === logedUserId
+                        ? ['/profile']
+                        : ['/user-profile', reply.commentCreator._id]
+                    "
+                    class="size-6 rounded-full shrink-0 mt-0.5 object-cover cursor-pointer"
+                    [src]="reply.commentCreator.photo"
+                    [alt]="reply.commentCreator.name"
+                    [title]="reply.commentCreator.name"
+                  />
+                  <div class="flex flex-col">
+                    <div
+                      class="bg-gray-100 hover:bg-gray-200/80 transition-colors rounded-2xl px-3 py-1.5 w-fit max-w-full"
+                    >
+                      <h4
+                        [routerLink]="
+                          reply.commentCreator._id === logedUserId
+                            ? ['/profile']
+                            : ['/user-profile', reply.commentCreator._id]
+                        "
+                        class="text-[12px] font-semibold leading-tight text-gray-900 cursor-pointer"
+                      >
+                        {{ reply.commentCreator.name }}
+                      </h4>
+                      <p class="text-[12px] leading-snug text-gray-800 mt-0.5 wrap-break-word">
+                        {{ reply.content }}
+                      </p>
+                      @if (reply.image) {
+                        <img
+                          (click)="openImageModal(reply.image)"
+                          [src]="reply.image"
+                          class="mt-1.5 rounded-xl max-w-40 max-h-40 object-cover cursor-pointer"
+                        />
+                      }
+                    </div>
+                    <span class="text-2xs text-gray-400 mt-0.5 pl-1">
+                      {{ reply.createdAt | timeago }}
+                    </span>
+                  </div>
+                </div>
+              }
+
+              <!-- No replies -->
+              @if (getReplies(comment._id).length === 0) {
+                <p class="text-[11px] text-gray-400 italic py-1">No replies yet. Be the first!</p>
+              }
+
+              <!-- ─── Reply Input ─── -->
+              <div class="flex gap-2 mt-1">
+                <img
+                  class="size-6 rounded-full shrink-0 mt-1 object-cover border border-gray-200"
+                  [src]="userPhoto()"
+                  alt="You"
+                />
+
+                <div class="flex-1 flex flex-col gap-1.5">
+                  <!-- Reply Image Preview -->
+                  @if (getReplyPreview(comment._id)) {
+                    <div class="relative w-fit">
+                      <img
+                        [src]="getReplyPreview(comment._id)"
+                        class="rounded-xl max-h-32 object-cover"
+                      />
+                      <button
+                        type="button"
+                        (click)="removeReplyImage(comment._id)"
+                        class="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition cursor-pointer"
+                      >
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                      </button>
+                    </div>
+                  }
+
+                  <!-- Input Row -->
+                  <div
+                    class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200/70 rounded-full px-3 py-1.5 transition-all"
+                  >
+                    <input
+                      type="text"
+                      [formControl]="replyControls[comment._id]"
+                      placeholder="Write a reply..."
+                      class="flex-1 bg-transparent text-[12px] placeholder-gray-400 focus:outline-none border-none ring-0 focus:ring-0 min-w-0"
+                      (keydown.enter)="submitReply(comment._id)"
+                    />
+
+                    <label
+                      for="replyFileUpload-{{ comment._id }}"
+                      class="cursor-pointer transition shrink-0"
+                      [class]="
+                        getReplyPreview(comment._id)
+                          ? 'text-blue-500'
+                          : 'text-gray-400 hover:text-blue-500'
+                      "
+                      title="Add photo"
+                    >
+                      <i class="fa-solid fa-image text-sm"></i>
+                    </label>
+                    <input
+                      type="file"
+                      id="replyFileUpload-{{ comment._id }}"
+                      class="hidden"
+                      accept="image/*"
+                      (change)="uploadReplyImage(comment._id, $event)"
+                    />
+
+                    <button
+                      type="button"
+                      (click)="submitReply(comment._id)"
+                      class="text-blue-500 hover:text-blue-600 transition shrink-0 cursor-pointer"
+                    >
+                      <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+        <!-- end replies section -->
+      </div>
+    </div>
+  } @empty {
+    <div class="flex flex-col items-center justify-center py-6 gap-2 text-gray-400">
+      <div class="bg-gray-100 p-3 rounded-full">
+        <i class="fa-regular fa-comment-dots text-xl text-gray-400"></i>
+      </div>
+      <p class="text-sm font-medium text-gray-500">No comments yet</p>
+      <p class="text-xs text-blue-500 font-semibold">Be the first to comment.</p>
+    </div>
+  }
+</div>
+
+<!-- Image Modal -->
+@if (showImageModal()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/85"
+    (click)="closeImageModal()"
+  >
+    <div class="relative" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="absolute top-2 left-2 z-10 bg-black/50 rounded-full p-2 text-white hover:text-gray-300 transition cursor-pointer"
+        (click)="closeImageModal()"
+      >
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18 17.94 6M18 18 6.06 6"
+          />
+        </svg>
+      </button>
+      <img
+        class="block w-[95vw] max-h-[85vh] rounded-lg object-contain md:w-auto md:max-w-[90vw]"
+        [src]="selectedImage"
+        alt=""
+      />
+    </div>
+  </div>
+}
+
+<!-- ─── Comment Input ─── -->
+<div class="flex flex-col gap-2 px-2 pt-3 pb-1 border-t border-gray-100 mt-2">
+  @if (previewImage()) {
+    <div class="pl-10 relative w-fit">
+      <img [src]="previewImage()" class="rounded-xl max-h-40 object-cover" />
+      <button
+        type="button"
+        (click)="removeSelectedImage()"
+        class="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition cursor-pointer"
+      >
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+    </div>
+  }
+
+  <div class="flex items-center gap-2">
+    <img
+      class="size-8 rounded-full shrink-0 object-cover border border-gray-200"
+      [src]="userPhoto()"
+      alt="You"
+    />
+
+    <form
+      (submit)="submitComment($event)"
+      class="flex-1 flex items-center gap-2 bg-gray-100 hover:bg-gray-200/70 rounded-full px-4 py-2 transition-all"
+    >
+      <input
+        type="text"
+        [formControl]="commentContent"
+        autocomplete="off"
+        name="comment"
+        placeholder="Write a comment..."
+        class="flex-1 bg-transparent text-[13px] placeholder-gray-400 focus:outline-none border-none ring-0 focus:ring-0 min-w-0"
+      />
+
+      <label
+        for="fileUpload"
+        class="cursor-pointer transition shrink-0"
+        [class]="previewImage() ? 'text-blue-500' : 'text-gray-400 hover:text-blue-500'"
+        title="Add photo"
+      >
+        <i class="fa-solid fa-image text-base"></i>
+      </label>
+      <input
+        type="file"
+        id="fileUpload"
+        class="hidden"
+        accept="image/*"
+        (change)="uploadfile($event)"
+      />
+
+      <button
+        type="submit"
+        class="text-blue-500 hover:text-blue-600 transition shrink-0 disabled:opacity-40 cursor-pointer"
+      >
+        <i class="fa-solid fa-paper-plane text-base"></i>
+      </button>
+    </form>
+  </div>
+</div>

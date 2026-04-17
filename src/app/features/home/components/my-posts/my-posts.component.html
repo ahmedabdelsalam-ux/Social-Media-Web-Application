@@ -1,0 +1,11 @@
+@for (post of myPost(); track post._id) {
+  <app-singlpost [postId]="post._id" [postData]="post" />
+} @empty {
+  <div class="flex flex-col items-center justify-center text-center mt-20">
+    <!-- Icon -->
+    <i class="fa-regular fa-face-frown text-6xl text-gray-300 mb-4"></i>
+
+    <!-- Title -->
+    <h2 class="text-xl font-semibold text-gray-600">No Posts Yet</h2>
+  </div>
+}

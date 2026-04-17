@@ -1,0 +1,86 @@
+<section>
+  <div class="container xl:w-[95%] mt-20 py-10">
+    <div class="all w-full lg:w-3/4 mx-auto flex flex-col lg:flex-row gap-8">
+      <!-- Left -->
+      <div class="left-site p-4 lg:w-1/2 order-2 lg:order-1">
+        <div class="content text-center lg:text-start">
+          <h1 class="text-main-color font-bold text-4xl lg:text-5xl">Route Posts</h1>
+
+          <p class="text-xl lg:text-2xl font-normal mt-3">
+            Connect with friends and the world around you on Route Posts.
+          </p>
+        </div>
+
+        <div
+          class="info mt-6 rounded-2xl border border-[#c9d5ff] bg-white/80 p-4 shadow-sm backdrop-blur sm:p-5"
+        >
+          <span class="uppercase text-sm text-main-color font-bold"> About Route Academy </span>
+
+          <h4 class="font-semibold text-lg mt-1">Egypt's Leading IT Training Center Since 2012</h4>
+
+          <p class="mt-2 text-sm lg:text-base">
+            Route Academy is the premier IT training center in Egypt, established in 2012. We
+            specialize in delivering high-quality training courses in programming, web development,
+            and application development.
+          </p>
+
+          <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="rounded-xl border border-[#c9d5ff] bg-[#f2f6ff] px-3 py-2">
+              <p class="text-base font-extrabold text-main-color">2012</p>
+              <p class="text-[11px] font-bold uppercase text-slate-600">Founded</p>
+            </div>
+
+            <div class="rounded-xl border border-[#c9d5ff] bg-[#f2f6ff] px-3 py-2">
+              <p class="text-base font-extrabold text-main-color">40K+</p>
+              <p class="text-[11px] font-bold uppercase text-slate-600">Graduates</p>
+            </div>
+
+            <div class="rounded-xl border border-[#c9d5ff] bg-[#f2f6ff] px-3 py-2">
+              <p class="text-base font-extrabold text-main-color">50+</p>
+              <p class="text-[11px] font-bold uppercase text-slate-600">Partner Companies</p>
+            </div>
+
+            <div class="rounded-xl border border-[#c9d5ff] bg-[#f2f6ff] px-3 py-2">
+              <p class="text-base font-extrabold text-main-color">5</p>
+              <p class="text-[11px] font-bold uppercase text-slate-600">Branches</p>
+            </div>
+
+            <div class="rounded-xl border border-[#c9d5ff] bg-[#f2f6ff] px-3 py-2">
+              <p class="text-base font-extrabold text-main-color">20</p>
+              <p class="text-[11px] font-bold uppercase text-slate-600">Diplomas Available</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div class="right-site lg:w-1/2 max-w-xl mx-auto order-1 lg:order-2">
+        <div class="form-card w-full rounded-2xl bg-white p-4 sm:p-6 shadow-md">
+          <ul class="tabs mb-5 grid grid-cols-2 rounded-xl bg-slate-100 p-1">
+            <li class="text-center">
+              <a
+                class="block rounded py-2 text-sm font-extrabold transition hover:text-slate-800"
+                routerLink="/login"
+                routerLinkActive="bg-white text-main-color"
+              >
+                Login
+              </a>
+            </li>
+
+            <li class="text-center">
+              <a
+                class="block rounded py-2 text-sm font-extrabold transition hover:text-slate-800"
+                routerLink="/register"
+                routerLinkActive="bg-white text-main-color"
+              >
+                Register
+              </a>
+            </li>
+          </ul>
+
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

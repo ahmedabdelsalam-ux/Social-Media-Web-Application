@@ -1,0 +1,248 @@
+<section>
+  <div class="mb-5">
+    <h2 class="text-3xl font-semibold">Create a new account</h2>
+    <span class="text-gray-400">It is quick and easy.</span>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()">
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-regular fa-user"></i>
+      </div>
+      <input
+        formControlName="name"
+        type="text"
+        id="input-group-1"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Full Name"
+      />
+    </div>
+
+    @if (registerForm.get('name')?.errors && registerForm.get('name')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('name')?.getError('required')) {
+              <li>Name input is required</li>
+            } @else if (registerForm.get('name')?.getError('minlength')) {
+              <li>Name input should be more than or equal 3 characters</li>
+            } @else if (registerForm.get('name')?.getError('maxlength')) {
+              <li>Name input should be less than or equal 20 characters</li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-at"></i>
+      </div>
+      <input
+        formControlName="username"
+        type="text"
+        id="input-group-1"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Username"
+      />
+    </div>
+
+    @if (registerForm.get('username')?.errors && registerForm.get('username')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('username')?.getError('required')) {
+              <li>User Name input is required</li>
+            } @else if (registerForm.get('username')?.getError('pattern')) {
+              <li>
+                Username must be 3–30 characters and contain only lowercase letters, numbers, or
+                underscore (_).
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-at"></i>
+      </div>
+      <input
+        formControlName="email"
+        type="email"
+        id="input-group-1"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Email Address"
+      />
+    </div>
+
+    @if (registerForm.get('email')?.errors && registerForm.get('email')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('email')?.getError('required')) {
+              <li>Email input is required</li>
+            } @else if (registerForm.get('email')?.getError('email')) {
+              <li>Please Enter Valid Email</li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-user-group"></i>
+      </div>
+      <select
+        formControlName="gender"
+        name="gender"
+        id="countries"
+        class="block w-full ps-12 px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+      >
+        <option class="rounded-base" value="" selected hidden>Select gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+
+    @if (registerForm.get('gender')?.errors && registerForm.get('gender')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('gender')?.getError('required')) {
+              <li>Gender input is required</li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-regular fa-calendar"></i>
+      </div>
+      <input
+        formControlName="dateOfBirth"
+        type="date"
+        id="input-group-1"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder=""
+      />
+    </div>
+
+    @if (registerForm.get('dateOfBirth')?.errors && registerForm.get('dateOfBirth')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('dateOfBirth')?.getError('required')) {
+              <li>Date input is required</li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <input
+        formControlName="password"
+        [type]="passwordFlag == true ? 'password' : 'text'"
+        id="input-group-1"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Password"
+      />
+
+      @if (registerForm.get('password')?.value) {
+        <i
+          class="fa-solid absolute top-[30%] right-2.5 cursor-pointer z-20"
+          [class]="passwordFlag == true ? 'fa-eye' : 'fa-eye-slash'"
+          (click)="showPassword()"
+        ></i>
+      }
+    </div>
+
+    @if (registerForm.get('password')?.errors && registerForm.get('password')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('password')?.getError('required')) {
+              <li>Password input is required</li>
+            } @else if (registerForm.get('password')?.getError('pattern')) {
+              <li>
+                Minimum eight characters, at least one upper case English letter, one lower case
+                English letter, one number and one special character.
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <div class="relative mt-3">
+      <div
+        class="absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none text-slate-400"
+      >
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <input
+        formControlName="rePassword"
+        [type]="rePasswordFlag == true ? 'password' : 'text'"
+        id="input-group-1"
+        class="block w-full ps-12 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading rounded-base focus:ring-main-color focus:border-main-color focus:border-0 focus:bg-transparent shadow-xs placeholder:text-body"
+        placeholder="Confirm Password"
+      />
+
+      @if (registerForm.get('rePassword')?.value) {
+        <i
+          class="fa-solid absolute top-[30%] right-2.5 cursor-pointer z-20"
+          [class]="rePasswordFlag == true ? 'fa-eye' : 'fa-eye-slash'"
+          (click)="showRePassword()"
+        ></i>
+      }
+    </div>
+
+    @if (registerForm.get('rePassword')?.errors && registerForm.get('rePassword')?.touched) {
+      <div class="flex px-3 py-2 mt-0.5 text-base text-red-800 rounded-xs bg-red-100" role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+          <ul class="list-disc list-inside">
+            @if (registerForm.get('rePassword')?.getError('required')) {
+              <li>RePassword input is required</li>
+            } @else if (registerForm.get('rePassword')?.getError('mismatch')) {
+              <li>Confirm Password is Incorrect</li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <button
+      [disabled]="registerForm.valid ? false : true"
+      class="w-full text-center bg-main-color py-2.5 mt-3 rounded-base cursor-pointer hover:bg-[#001f6b] transition text-white disabled:bg-gray-200 disabled:text-gray-600 disabled:cursor-no-drop disabled:font-bold"
+    >
+      Creat New Account
+    </button>
+  </form>
+</section>
