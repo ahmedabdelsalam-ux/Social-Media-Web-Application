@@ -16,11 +16,14 @@
       />
 
       <!-- Bubble + Replies -->
-      <div class="flex flex-col max-w-[85%] w-full">
-        <div class="relative">
+      <!-- ✅ flex-1 min-w-0 بدل max-w-[85%] w-full -->
+      <div class="flex flex-col flex-1 min-w-0">
+        <!-- ✅ flex + items-start عشان الـ three-dots يبقى جنب الـ bubble مش absolute -->
+        <div class="flex items-start gap-1">
           <!-- Comment Bubble -->
+          <!-- ✅ min-w-0 + flex-1 عشان ميتمددش -->
           <div
-            class="bg-gray-100 hover:bg-gray-200/80 transition-colors duration-150 rounded-2xl px-3 py-2 w-fit max-w-full"
+            class="bg-gray-100 hover:bg-gray-200/80 transition-colors duration-150 rounded-2xl px-3 py-2 w-fit max-w-full min-w-0"
           >
             <h4
               [routerLink]="
@@ -34,6 +37,7 @@
             </h4>
 
             @if (activeEditCommentId !== comment._id) {
+              <!-- ✅ break-words بدل wrap-break-word -->
               <p class="text-[13px] leading-snug text-gray-800 mt-0.5 wrap-break-word">
                 {{ comment.content }}
               </p>
@@ -41,20 +45,26 @@
                 <img
                   (click)="openImageModal(comment.image)"
                   [src]="comment.image"
-                  class="mt-2 rounded-xl max-w-55 max-h-55 object-cover cursor-pointer"
+                  class="mt-2 rounded-xl max-w-full max-h-52 object-cover cursor-pointer"
                 />
               }
             }
 
             @if (activeEditCommentId === comment._id) {
+              <!-- ✅ resize-none + rows عشان ميكسرش اللاياوت -->
               <textarea
                 [(ngModel)]="editContent"
-                class="w-full rounded-lg border px-2 py-1 mt-1 text-[13px]"
+                class="w-full rounded-lg border px-2 py-1 mt-1 text-[13px] resize-none"
+                rows="3"
               ></textarea>
 
               @if (editPreviewImage()) {
-                <div class="mt-2 relative">
-                  <img [src]="editPreviewImage()" class="rounded-xl max-h-40 object-cover" />
+                <div class="mt-2 relative w-fit max-w-full">
+                  <!-- ✅ max-w-full عشان الصورة ميطلعش بره -->
+                  <img
+                    [src]="editPreviewImage()"
+                    class="rounded-xl max-h-40 object-cover max-w-full"
+                  />
                   <button
                     type="button"
                     (click)="removeEditImage()"
@@ -79,7 +89,8 @@
                 (change)="uploadEditFile($event)"
               />
 
-              <div class="flex gap-2 mt-2">
+              <!-- ✅ flex-wrap عشان الأزرار ميتكسروش -->
+              <div class="flex flex-wrap gap-2 mt-2">
                 <button
                   (click)="saveComment(comment._id)"
                   class="text-blue-500 px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
@@ -97,9 +108,10 @@
           </div>
 
           <!-- Three Dots Menu -->
+          <!-- ✅ relative shrink-0 mt-1.5 بدل absolute -right-8 top-1/2 -->
           @if (comment.commentCreator._id === logedUserId) {
             <div
-              class="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+              class="relative shrink-0 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <button
                 (click)="toggleDropdown(comment._id, $event)"
@@ -197,7 +209,8 @@
                     [alt]="reply.commentCreator.name"
                     [title]="reply.commentCreator.name"
                   />
-                  <div class="flex flex-col">
+                  <!-- ✅ min-w-0 عشان الـ reply bubble ميتمددش -->
+                  <div class="flex flex-col min-w-0">
                     <div
                       class="bg-gray-100 hover:bg-gray-200/80 transition-colors rounded-2xl px-3 py-1.5 w-fit max-w-full"
                     >
@@ -211,6 +224,7 @@
                       >
                         {{ reply.commentCreator.name }}
                       </h4>
+                      <!-- ✅ break-words بدل wrap-break-word -->
                       <p class="text-[12px] leading-snug text-gray-800 mt-0.5 wrap-break-word">
                         {{ reply.content }}
                       </p>
@@ -218,7 +232,7 @@
                         <img
                           (click)="openImageModal(reply.image)"
                           [src]="reply.image"
-                          class="mt-1.5 rounded-xl max-w-40 max-h-40 object-cover cursor-pointer"
+                          class="mt-1.5 rounded-xl max-w-full max-h-40 object-cover cursor-pointer"
                         />
                       }
                     </div>
@@ -242,13 +256,15 @@
                   alt="You"
                 />
 
-                <div class="flex-1 flex flex-col gap-1.5">
+                <!-- ✅ min-w-0 على الـ flex-1 -->
+                <div class="flex-1 min-w-0 flex flex-col gap-1.5">
                   <!-- Reply Image Preview -->
                   @if (getReplyPreview(comment._id)) {
-                    <div class="relative w-fit">
+                    <!-- ✅ max-w-full على الـ preview -->
+                    <div class="relative w-fit max-w-full">
                       <img
                         [src]="getReplyPreview(comment._id)"
-                        class="rounded-xl max-h-32 object-cover"
+                        class="rounded-xl max-h-32 object-cover max-w-full"
                       />
                       <button
                         type="button"
@@ -261,8 +277,9 @@
                   }
 
                   <!-- Input Row -->
+                  <!-- ✅ min-w-0 على الـ container عشان ميتمددش -->
                   <div
-                    class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200/70 rounded-full px-3 py-1.5 transition-all"
+                    class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200/70 rounded-full px-3 py-1.5 transition-all min-w-0"
                   >
                     <input
                       type="text"
@@ -353,8 +370,9 @@
 <!-- ─── Comment Input ─── -->
 <div class="flex flex-col gap-2 px-2 pt-3 pb-1 border-t border-gray-100 mt-2">
   @if (previewImage()) {
-    <div class="pl-10 relative w-fit">
-      <img [src]="previewImage()" class="rounded-xl max-h-40 object-cover" />
+    <div class="pl-10 relative w-fit max-w-full">
+      <!-- ✅ max-w-full على الصورة -->
+      <img [src]="previewImage()" class="rounded-xl max-h-40 object-cover max-w-full" />
       <button
         type="button"
         (click)="removeSelectedImage()"
@@ -374,7 +392,7 @@
 
     <form
       (submit)="submitComment($event)"
-      class="flex-1 flex items-center gap-2 bg-gray-100 hover:bg-gray-200/70 rounded-full px-4 py-2 transition-all"
+      class="flex-1 flex items-center gap-2 bg-gray-100 hover:bg-gray-200/70 rounded-full px-4 py-2 transition-all min-w-0"
     >
       <input
         type="text"
